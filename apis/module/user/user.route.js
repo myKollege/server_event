@@ -13,4 +13,5 @@ router.post("/update_bulk", user_contrller_1.updateBulkUser);
 router.get("/list", user_contrller_1.getUser);
 router.delete("/delete/:id", user_contrller_1.deleteItem);
 router.get("/all", user_contrller_1.getAllUser);
+router.post("/login", user_contrller_1.login);
 exports.default = router;

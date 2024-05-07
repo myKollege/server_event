@@ -8,9 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteItem = exports.updateBulkUser = exports.updateUser = exports.getAllUser = exports.getUser = exports.createBulkUser = exports.createUser = void 0;
+exports.deleteItem = exports.updateBulkUser = exports.updateUser = exports.login = exports.getAllUser = exports.getUser = exports.createBulkUser = exports.createUser = void 0;
 const user_service_1 = require("./user.service");
+const user_model_1 = __importDefault(require("./user.model"));
 // ==================== create single user  ======================
 const createUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -83,6 +87,7 @@ exports.createBulkUser = createBulkUser;
 const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, sort, id, phone, eventId, page, limit, eventUserId } = req.query;
+        console.log(eventId, "ppppppppppppppppppppp");
         // Setting default values for page and limit
         const pageNumber = parseInt(page, 10) || 1;
         const pageSize = parseInt(limit, 10) || 10;
@@ -114,9 +119,9 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.getUser = getUser;
 const getAllUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { name, sort, id, phone, eventId, eventUserId } = req.query;
+        const { email, password } = req.query;
         // Getting data
-        const result = yield (0, user_service_1.getAllUserFromDB)(name, sort, id, phone, eventId, eventUserId);
+        const result = yield (0, user_service_1.getAllUserFromDB)(email, password);
         // Check if folders exist
         if (!result || result.length === 0) {
             // Sending response
@@ -136,6 +141,37 @@ const getAllUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.getAllUser = getAllUser;
+const login = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { email, password } = req.body;
+        // Getting data
+        const user = yield user_model_1.default.findOne({ email });
+        console.log(user, "pppppppppppppppppppp");
+        // Check if folders exist
+        if (!user) {
+            // Sending response
+            return res.status(404).json({
+                message: "No User found",
+                data: [],
+            });
+        }
+        if (user.password !== password) {
+            return res.status(404).json({
+                message: "Password is incorrect",
+                data: [],
+            });
+        }
+        res.status(200).json({
+            status: "success",
+            data: user,
+        });
+    }
+    catch (error) {
+        console.error("Error fetching users:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
+exports.login = login;
 const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { id } = req.params;
