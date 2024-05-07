@@ -87,7 +87,7 @@ exports.createBulkUser = createBulkUser;
 const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { name, sort, id, phone, eventId, page, limit, eventUserId } = req.query;
-        console.log(eventId, "ppppppppppppppppppppp");
+        console.log(eventId, "ppppppp *****pppppppppppppp");
         // Setting default values for page and limit
         const pageNumber = parseInt(page, 10) || 1;
         const pageSize = parseInt(limit, 10) || 10;
@@ -95,6 +95,7 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const skip = (pageNumber - 1) * pageSize;
         // Getting data
         const result = yield (0, user_service_1.getUserFromDB)(name, sort, id, phone, eventId, skip, pageSize, eventUserId);
+        console.log(result, "pppp 55555555555555 ppppp");
         // Check if users exist
         if (!result || result.length === 0) {
             // Sending response
@@ -119,9 +120,9 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
 exports.getUser = getUser;
 const getAllUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { email, password } = req.query;
+        const { name, sort, id, phone, eventId, eventUserId } = req.query;
         // Getting data
-        const result = yield (0, user_service_1.getAllUserFromDB)(email, password);
+        const result = yield (0, user_service_1.getAllUserFromDB)(name, id, phone, eventId, eventUserId);
         // Check if folders exist
         if (!result || result.length === 0) {
             // Sending response

@@ -29,7 +29,7 @@ exports.createUserToDB = createUserToDB;
 const getUserFromDB = (nameQuery, sortQuery, idQuery, phoneQuery, eventId, skip, limit, eventUserId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let query = {};
-        console.log(eventUserId, "oooooooooooooooooooooooo");
+        console.log(eventId, "ooooooooooo --------------ooooooooooooo");
         // If name is provided, filter by name
         if (nameQuery) {
             query.name = { $regex: nameQuery, $options: "i" };
@@ -38,7 +38,7 @@ const getUserFromDB = (nameQuery, sortQuery, idQuery, phoneQuery, eventId, skip,
             query._id = idQuery;
         }
         if (eventId) {
-            query.eventId = idQuery;
+            query.eventId = eventId;
         }
         if (eventUserId) {
             query.eventUserId = eventUserId;
@@ -61,14 +61,23 @@ const getUserFromDB = (nameQuery, sortQuery, idQuery, phoneQuery, eventId, skip,
     }
 });
 exports.getUserFromDB = getUserFromDB;
-const getAllUserFromDB = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUserFromDB = (name, id, phone, eventId, eventUserId) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let query = {};
-        if (password) {
-            query.password = password;
+        if (name) {
+            query.name = { $regex: name, $options: "i" };
         }
-        if (email) {
-            query.email = email;
+        if (id) {
+            query._id = id;
+        }
+        if (phone) {
+            query.phone = phone;
+        }
+        if (eventId) {
+            query.eventId = eventId;
+        }
+        if (eventUserId) {
+            query.eventUserId = eventUserId;
         }
         const result = yield user_model_1.default.find().find(query);
         return result;
