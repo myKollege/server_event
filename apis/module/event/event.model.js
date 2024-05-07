@@ -65,7 +65,10 @@ const EventSchema = new mongoose_1.Schema({
     ],
     hotelInfo: [
         {
+            name: { type: String },
             address: { type: String },
+            imageUrl: { type: String },
+            mapUrl: { type: String },
             phone: { type: String },
         },
     ],
