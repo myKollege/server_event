@@ -61,31 +61,16 @@ const getUserFromDB = (nameQuery, sortQuery, idQuery, phoneQuery, eventId, skip,
     }
 });
 exports.getUserFromDB = getUserFromDB;
-const getAllUserFromDB = (nameQuery, sortQuery, idQuery, phoneQuery, eventId, eventUserId) => __awaiter(void 0, void 0, void 0, function* () {
+const getAllUserFromDB = (email, password) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         let query = {};
-        // If name is provided, filter by name
-        if (nameQuery) {
-            query.name = { $regex: nameQuery, $options: "i" };
+        if (password) {
+            query.password = password;
         }
-        if (idQuery) {
-            query._id = idQuery;
+        if (email) {
+            query.email = email;
         }
-        if (eventId) {
-            query.eventId = eventId;
-        }
-        if (eventUserId) {
-            query.eventUserId = eventUserId;
-        }
-        if (phoneQuery) {
-            query.phone = phoneQuery;
-        }
-        // Sorting based on sortQuery
-        let sort = { created_at: 1 }; // Default
-        if (sortQuery && sortQuery.toLowerCase() === "desc") {
-            sort = { created_at: -1 }; // descending order
-        }
-        const result = yield user_model_1.default.find().find(query).sort(sort);
+        const result = yield user_model_1.default.find().find(query);
         return result;
     }
     catch (error) {
