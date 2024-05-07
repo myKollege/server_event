@@ -39,7 +39,7 @@ var __importDefault =
   };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
-const app_1 = __importDefault(require("../app"));
+const app_1 = __importDefault(require("./app"));
 const port = process.env.PORT || 4000;
 // connect to db
 connectToDB();
@@ -48,7 +48,9 @@ function connectToDB() {
   return __awaiter(this, void 0, void 0, function* () {
     try {
       // ============== connecting to db ==============
-      yield mongoose_1.default.connect("mongodb://127.0.0.1:27017/eventMange");
+      yield mongoose_1.default.connect(
+        "mongodb+srv://doadmin:392pLd1645I7Kiur@brandhancertravelxlDB-46ee455f.mongo.ondigitalocean.com/admin?tls=true&authSource=admin"
+      );
       console.log("connected to db");
       // ============== starting the server ==============
       app_1.default.listen(port, () => {
