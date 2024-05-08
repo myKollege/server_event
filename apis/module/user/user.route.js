@@ -12,6 +12,8 @@ router.patch("/update/:id", user_contrller_1.updateUser);
 router.post("/update_bulk", user_contrller_1.updateBulkUser);
 router.get("/list", user_contrller_1.getUser);
 router.delete("/delete/:id", user_contrller_1.deleteItem);
+router.delete("/group_delete/:groupName", user_contrller_1.deleteUsersByGroupNameFrom);
 router.get("/all", user_contrller_1.getAllUser);
 router.post("/login", user_contrller_1.login);
+router.get("/test", user_contrller_1.test);
 exports.default = router;
