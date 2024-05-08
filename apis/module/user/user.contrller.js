@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteItem = exports.updateBulkUser = exports.updateUser = exports.login = exports.getAllUser = exports.getUser = exports.createBulkUser = exports.createUser = void 0;
+exports.deleteUsersByGroupNameFrom = exports.deleteItem = exports.test = exports.updateBulkUser = exports.updateUser = exports.login = exports.getAllUser = exports.getUser = exports.createBulkUser = exports.createUser = void 0;
 const user_service_1 = require("./user.service");
 const user_model_1 = __importDefault(require("./user.model"));
 // ==================== create single user  ======================
@@ -95,7 +95,6 @@ const getUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         const skip = (pageNumber - 1) * pageSize;
         // Getting data
         const result = yield (0, user_service_1.getUserFromDB)(name, sort, id, phone, eventId, skip, pageSize, eventUserId);
-        console.log(result, "pppp 55555555555555 ppppp");
         // Check if users exist
         if (!result || result.length === 0) {
             // Sending response
@@ -177,7 +176,9 @@ const updateUser = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     try {
         const { id } = req.params;
         const data = req.body;
+        console.log(data, "pppppppp 3333333333333 fffff  pppppppppp");
         const updatedUser = yield (0, user_service_1.updateUserInDB)(id, data);
+        console.log(updatedUser);
         res.status(200).json({
             status: "success",
             data: updatedUser,
@@ -222,9 +223,51 @@ const updateBulkUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.updateBulkUser = updateBulkUser;
+const test = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // const data = req.body;
+        const usersToUpdate = yield user_model_1.default.find();
+        // Extract the IDs of the users to update
+        const idsToUpdate = usersToUpdate.map((user) => {
+            return {
+                id: user._id,
+                passportNo: user === null || user === void 0 ? void 0 : user.passportNo,
+            };
+        });
+        // const result = await User.updateMany(
+        //   { _id: { $in: idsToUpdate } }, // Filter by IDs
+        //   { $set: { eventId: "663a08563b37806769206ddd" } } // Update eventId field
+        // );
+        // console.log(`${result} users updated`);
+        let totalUserUpdated = 0;
+        // if (data?.ids?.length) {
+        //   for (let i = 0; i < data?.ids?.length; i++) {
+        //     const result = await updateUserInDB(data?.ids[i], {
+        //       eventId: data?.eventId,
+        //     });
+        //     console.log(result);
+        //     if (result) {
+        //       totalUserUpdated++;
+        //     }
+        //   }
+        // }
+        res.status(200).json({
+            status: "success",
+            data: idsToUpdate,
+        });
+    }
+    catch (error) {
+        console.error("Error updating bulk user:", error);
+        res.status(500).json({
+            status: "error",
+            message: "Failed to update bulk user",
+        });
+    }
+});
+exports.test = test;
 const deleteItem = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { id } = req.params;
+        const { id, groupName } = req.params;
         const result = yield (0, user_service_1.deleteFromDb)(id);
         if (!result) {
             return res.status(404).json({ error: "Item not found" });
@@ -237,3 +280,18 @@ const deleteItem = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
     }
 });
 exports.deleteItem = deleteItem;
+const deleteUsersByGroupNameFrom = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { groupName } = req.params;
+        const result = yield (0, user_service_1.deleteUsersByGroupNameFromDB)(groupName);
+        if (!result) {
+            return res.status(404).json({ error: "Item not found" });
+        }
+        res.status(200).json({ data: result, message: "deleted successfully" });
+    }
+    catch (error) {
+        console.error("Error deleting Folder:", error.message);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+exports.deleteUsersByGroupNameFrom = deleteUsersByGroupNameFrom;

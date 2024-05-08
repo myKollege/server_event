@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteFromDb = exports.updateUserInDB = exports.getAllUserFromDB = exports.getUserFromDB = exports.createUserToDB = void 0;
+exports.deleteUsersByGroupNameFromDB = exports.deleteFromDb = exports.updateUserInDB = exports.getAllUserFromDB = exports.getUserFromDB = exports.createUserToDB = void 0;
 const user_model_1 = __importDefault(require("./user.model"));
 const createUserToDB = (payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -32,7 +32,7 @@ const getUserFromDB = (nameQuery, sortQuery, idQuery, phoneQuery, eventId, skip,
         console.log(eventId, "ooooooooooo --------------ooooooooooooo");
         // If name is provided, filter by name
         if (nameQuery) {
-            query.name = { $regex: nameQuery, $options: "i" };
+            query.firstName = { $regex: nameQuery, $options: "i" };
         }
         if (idQuery) {
             query._id = idQuery;
@@ -65,7 +65,7 @@ const getAllUserFromDB = (name, id, phone, eventId, eventUserId) => __awaiter(vo
     try {
         let query = {};
         if (name) {
-            query.name = { $regex: name, $options: "i" };
+            query.firstName = { $regex: name, $options: "i" };
         }
         if (id) {
             query._id = id;
@@ -79,7 +79,7 @@ const getAllUserFromDB = (name, id, phone, eventId, eventUserId) => __awaiter(vo
         if (eventUserId) {
             query.eventUserId = eventUserId;
         }
-        const result = yield user_model_1.default.find().find(query);
+        const result = yield user_model_1.default.find().find(query).sort({ firstName: 1 });
         return result;
     }
     catch (error) {
@@ -90,6 +90,7 @@ const getAllUserFromDB = (name, id, phone, eventId, eventUserId) => __awaiter(vo
 exports.getAllUserFromDB = getAllUserFromDB;
 const updateUserInDB = (id, payload) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        console.log(id, payload);
         const updatedUser = yield user_model_1.default.findByIdAndUpdate(id, payload, {
             new: true,
         });
@@ -112,3 +113,20 @@ const deleteFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.deleteFromDb = deleteFromDb;
+const deleteUsersByGroupNameFromDB = (userGroupName) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        // Find users with the specified userGroupName
+        const usersToDelete = yield user_model_1.default.find({ userGroupName });
+        // Delete each user one by one
+        const deletionResults = yield Promise.all(usersToDelete.map((user) => __awaiter(void 0, void 0, void 0, function* () {
+            const deletedUser = yield user_model_1.default.findByIdAndDelete(user._id);
+            return deletedUser;
+        })));
+        return deletionResults;
+    }
+    catch (error) {
+        console.error("Error deleting users by group name:", error);
+        return null;
+    }
+});
+exports.deleteUsersByGroupNameFromDB = deleteUsersByGroupNameFromDB;
