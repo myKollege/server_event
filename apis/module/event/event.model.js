@@ -81,6 +81,8 @@ const EventSchema = new mongoose_1.Schema({
             imageUrl: { type: String },
         },
     ],
+    countryCode: { type: String },
+    guidebookUrl: { type: String },
 });
 const Event = mongoose_1.default.model("Event", EventSchema);
 exports.default = Event;

@@ -69,6 +69,7 @@ const userSchema = new mongoose_1.Schema({
     airTicketUrl: { type: String },
     visaImageUrl: { type: String },
     insuranceUrl: { type: String },
+    returnTicketUrl: { type: String },
 });
 const User = mongoose_1.default.model("User", userSchema);
 exports.default = User;
