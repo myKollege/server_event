@@ -202,6 +202,7 @@ const updateBulkUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
             for (let i = 0; i < ((_b = data === null || data === void 0 ? void 0 : data.ids) === null || _b === void 0 ? void 0 : _b.length); i++) {
                 const result = yield (0, user_service_1.updateUserInDB)(data === null || data === void 0 ? void 0 : data.ids[i], {
                     eventId: data === null || data === void 0 ? void 0 : data.eventId,
+                    eventName: data === null || data === void 0 ? void 0 : data.eventName,
                 });
                 console.log(result);
                 if (result) {
@@ -225,35 +226,20 @@ const updateBulkUser = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
 exports.updateBulkUser = updateBulkUser;
 const test = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // const data = req.body;
-        const usersToUpdate = yield user_model_1.default.find();
-        // Extract the IDs of the users to update
-        const idsToUpdate = usersToUpdate.map((user) => {
-            return {
-                id: user._id,
-                passportNo: user === null || user === void 0 ? void 0 : user.passportNo,
-            };
-        });
-        // const result = await User.updateMany(
-        //   { _id: { $in: idsToUpdate } }, // Filter by IDs
-        //   { $set: { eventId: "663a08563b37806769206ddd" } } // Update eventId field
+        const usersToUpdate = yield user_model_1.default.find({ userGroupName: "batch-2" });
+        const idsToUpdate = usersToUpdate.map((user) => user._id);
+        // const result: any = await User.updateMany(
+        //   { _id: { $in: idsToUpdate } },
+        //   { $set: { eventId: "663b467e665197910f694f5b" } }
         // );
-        // console.log(`${result} users updated`);
-        let totalUserUpdated = 0;
-        // if (data?.ids?.length) {
-        //   for (let i = 0; i < data?.ids?.length; i++) {
-        //     const result = await updateUserInDB(data?.ids[i], {
-        //       eventId: data?.eventId,
-        //     });
-        //     console.log(result);
-        //     if (result) {
-        //       totalUserUpdated++;
-        //     }
-        //   }
-        // }
+        const result = yield user_model_1.default.updateMany({ _id: { $in: idsToUpdate } }, { $set: { eventName: "FTSXIAOMI - Thailand Batch-2" } });
         res.status(200).json({
             status: "success",
-            data: idsToUpdate,
+            data: {
+                data: usersToUpdate,
+                usersUpdated: result.nModified,
+                userIds: idsToUpdate,
+            },
         });
     }
     catch (error) {
