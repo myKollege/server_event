@@ -55,6 +55,7 @@ const updateEventInDB = (id, payload) => __awaiter(void 0, void 0, void 0, funct
         const updatedEvent = yield event_model_1.default.findByIdAndUpdate(id, payload, {
             new: true,
         });
+        console.log(updatedEvent, "oooooooooooooooooo ----------- oo");
         return updatedEvent;
     }
     catch (e) {
