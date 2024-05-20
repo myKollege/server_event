@@ -70,6 +70,24 @@ const userSchema = new mongoose_1.Schema({
     visaImageUrl: { type: String },
     insuranceUrl: { type: String },
     returnTicketUrl: { type: String },
+    isCheckedTerms: { type: Boolean, default: false },
+    userActivity: [
+        {
+            type: {
+                type: String,
+                enum: [
+                    "TERMS_CHECKED",
+                    "PASSWORD_CHANGE",
+                    "PROFILE_UPDATE",
+                    "SIGNUP",
+                    "LOGOUT",
+                    "LOGIN",
+                ],
+            },
+            date: { type: Date, default: Date.now() },
+            description: { type: String },
+        },
+    ],
 });
 const User = mongoose_1.default.model("User", userSchema);
 exports.default = User;
