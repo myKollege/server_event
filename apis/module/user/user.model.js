@@ -84,10 +84,11 @@ const userSchema = new mongoose_1.Schema({
                     "LOGIN",
                 ],
             },
-            date: { type: Date, default: Date.now() },
+            date: { type: Date },
             description: { type: String },
         },
     ],
+    emergencyContactNumber: { type: String },
 });
 const User = mongoose_1.default.model("User", userSchema);
 exports.default = User;
